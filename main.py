@@ -1,6 +1,7 @@
 # Assume openai>=1.0.0
 from openai import OpenAI
 
+
 # Create an OpenAI client with your deepinfra token and endpoint
 openai = OpenAI(
     api_key="S0UDOnUz1GkI2hlTSSPijBK1iQMNTrLU",
