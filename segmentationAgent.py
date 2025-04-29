@@ -1,10 +1,12 @@
 import re
 from openai import OpenAI
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 def segment_into_paragraphs(text):
 
     openai = OpenAI(
-        api_key="S0UDOnUz1GkI2hlTSSPijBK1iQMNTrLU",
+        api_key=os.getenv("API_KEY"),
         base_url="https://api.deepinfra.com/v1/openai",
     )
 

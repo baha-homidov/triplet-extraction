@@ -3,8 +3,13 @@ from openai import OpenAI
 
 
 # Create an OpenAI client with your deepinfra token and endpoint
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 openai = OpenAI(
-    api_key="S0UDOnUz1GkI2hlTSSPijBK1iQMNTrLU",
+    api_key=os.getenv("API_KEY"),
     base_url="https://api.deepinfra.com/v1/openai",
 )
 
