@@ -1,24 +1,31 @@
-# Assume openai>=1.0.0
-from openai import OpenAI
+from ExtractorAgent import batch_extract_triplets
+
+from samplerAgent import process_paragraphs
 
 
-# Create an OpenAI client with your deepinfra token and endpoint
-from dotenv import load_dotenv
-import os
+batch_extract_triplets(
+        input_file="test.txt",
+        output_files=[
+            "LlamaOutput.json",
+            "QwenOutput.json",
+            "GemmaOutput.json"
+        ],
+        models=[
+            "meta-llama/Meta-Llama-3.1-8B-Instruct",
+            "Qwen/Qwen2.5-7B-Instruct",
+            "google/gemma-3-12b-it"
+        ]
+    )
 
-load_dotenv()
 
-openai = OpenAI(
-    api_key=os.getenv("API_KEY"),
-    base_url="https://api.deepinfra.com/v1/openai",
-)
 
-chat_completion = openai.chat.completions.create(
-    model="Qwen/Qwen2.5-7B-Instruct",
-    messages=[{"role": "user", "content": "Hello"}],
-)
-
-print(chat_completion.choices[0].message.content)
-print(chat_completion.usage.prompt_tokens, chat_completion.usage.completion_tokens)
+process_paragraphs(
+        input_files=[
+            {'model_name': 'Qwen', 'file_path': 'QwenOutput.json'},
+            {'model_name': 'Llama', 'file_path': 'LlamaOutput.json'},
+            {'model_name': 'Gemma', 'file_path': 'GemmaOutput.json'}
+        ],
+        output_file='consensus_output.json'
+    )
 
 

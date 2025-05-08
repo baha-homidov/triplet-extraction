@@ -2,7 +2,10 @@ import re
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
+
+# Function to segment the text into paragraphs
 def segment_into_paragraphs(text):
 
     openai = OpenAI(
@@ -17,7 +20,6 @@ def segment_into_paragraphs(text):
     paragraphs = []
     current_paragraph = [sentences[0]]
 
-
     prompt_template = """请分析以下农业病害文本的段落结构：
 当前段落内容：{prev_paragraph}
 需要判断的后续句子：{sentence}
@@ -30,6 +32,7 @@ def segment_into_paragraphs(text):
 
 请只回答“True”或“False”，不要添加任何解释。"""
 
+    # Function to call LLM to analyze paragraph structure
     def call_llm(prev_para, next_sentence):
         prompt = prompt_template.format(
             prev_paragraph=prev_para,
@@ -69,13 +72,16 @@ def segment_into_paragraphs(text):
     return paragraphs
 
 
+# Helper function to identify if a sentence is a section header
 def is_section_header(sentence):
     return re.match(r'^[一二三四五六七八九十]、.+', sentence)
 
+# Helper function to identify if a sentence is a list item
 def is_list_item(sentence):
     return re.match(r'^(\d+\.|①|②|③|●|▪|-)', sentence.strip())
 
 
+# Function to split text into sentences
 def segment_by_sentence(text):
 
     sentences = re.split(r'(?<=[!?。！？])|(?=\n[一二三四五六七八九十]、)', text)
@@ -98,10 +104,14 @@ def segment_by_sentence(text):
     return [s for s in processed if s]
 
 
+# Read input text from a file
 with open('test.txt', 'r') as file:
     text = file.read()
-paragraphs = segment_into_paragraphs(text)
 
+# Segment the text into paragraphs
+paragraphs = segment_into_paragraphs(text)
+print(paragraphs)
+# Write the segmented paragraphs to an output file
 with open('result.txt', 'w') as file:
     for i, para in enumerate(paragraphs):
         file.write(f"Paragraph {i+1}: {para}\n\n")
